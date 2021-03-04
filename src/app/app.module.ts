@@ -2,8 +2,10 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 
-import CONFIG, { ENV_SCHEMA } from 'src/env.schema';
+
 import { UserModule } from 'src/user';
+import { AuthModule } from 'src/auth';
+import CONFIG, { ENV_SCHEMA } from 'src/env.schema';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -31,6 +33,7 @@ import { AppService } from './app.service';
         };
       },
     }),
+    AuthModule,
     UserModule,
   ],
   controllers: [AppController],

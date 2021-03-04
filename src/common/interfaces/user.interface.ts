@@ -10,7 +10,7 @@ export interface User {
   readonly lastName: string;
 }
 
-export interface UserModel extends Document {
+export interface UserModel extends User, Document {
   readonly refreshToken: string;
   readonly refreshTokenExpires: Date;
 }
