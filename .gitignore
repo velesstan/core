@@ -2,6 +2,12 @@
 /dist
 /node_modules
 
+# env
+app.env
+
+# mongodb
+mongodb
+
 # Logs
 logs
 *.log
