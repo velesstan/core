@@ -28,9 +28,31 @@ export class AuthService {
     throw new UnauthorizedException();
   }
 
+  async refreshToken(
+    userId: string,
+    token: string,
+  ): Promise<{ accessToken: string }> {
+    const user = await this.userService.findById(userId);
+    if (user) {
+      if (user.toObject().refreshToken !== token) {
+        throw new UnauthorizedException();
+      }
+      if (dayjs().diff(dayjs(user.refreshTokenExpires), 'seconds') > 10) {
+        throw new UnauthorizedException();
+      }
+      const { password, refreshTokenExpires, ...payload } = user.toObject();
+      const refreshToken = await this.generateRefreshToken(userId);
+      return {
+        accessToken: this.jwtService.sign({ ...payload, refreshToken }),
+      };
+    } else {
+      throw new UnauthorizedException();
+    }
+  }
+
   async generateRefreshToken(userId: string): Promise<string> {
     const refreshToken = randtoken.generate(24);
-    const expiryDate = dayjs().add(10, 'days');
+    const expiryDate = dayjs().add(20, 'seconds');
     await this.userService.setRefreshToken(
       userId,
       refreshToken,

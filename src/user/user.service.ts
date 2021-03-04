@@ -26,6 +26,10 @@ export class UserService {
     }
   }
 
+  async find(query: FindUsersDto): Promise<UserModel[]> {
+    return await this.userModel.find(query).exec();
+  }
+
   async findById(id: string): Promise<UserModel | null> {
     return await this.userModel.findById(id).exec();
   }
