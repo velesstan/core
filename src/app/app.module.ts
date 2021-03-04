@@ -2,7 +2,6 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 
-
 import { UserModule } from 'src/user';
 import { AuthModule } from 'src/auth';
 import CONFIG, { ENV_SCHEMA } from 'src/env.schema';

@@ -2,32 +2,38 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
-import { UserModel } from 'src/common/interfaces';
+import { Role } from 'src/common/enums';
+import { User, UserModel } from 'src/common/interfaces';
 import { UserRef } from 'src/common/schemas';
-import { FindUsersDto } from './dto';
+import { CreateUserDto, FindUsersDto } from './dto';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectModel(UserRef) private readonly userModel: Model<UserModel>,
   ) {
-    this.boot();
-  }
-
-  private async boot() {
     if (process.env.NODE_ENV !== 'testing') {
-      const admin = await this.findByUsername('admin@veles.services');
-      if (!admin) {
-        await new this.userModel({
-          username: 'admin@veles.services',
-          password: 'admin',
-        }).save();
-      }
+      this.boot();
     }
   }
 
-  async find(query: FindUsersDto): Promise<UserModel[]> {
+  private async boot() {
+    const admin = await this.findByUsername('admin@veles.services');
+    if (!admin) {
+      await new this.userModel({
+        role: Role.Admin,
+        username: 'admin@veles.services',
+        password: 'admin',
+      }).save();
+    }
+  }
+
+  async find(query: FindUsersDto): Promise<User[]> {
     return await this.userModel.find(query).exec();
+  }
+
+  async create(user: CreateUserDto): Promise<User> {
+    return await new this.userModel(user).save();
   }
 
   async findById(id: string): Promise<UserModel | null> {

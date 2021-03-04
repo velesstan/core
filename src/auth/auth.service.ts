@@ -52,7 +52,7 @@ export class AuthService {
 
   async generateRefreshToken(userId: string): Promise<string> {
     const refreshToken = randtoken.generate(24);
-    const expiryDate = dayjs().add(20, 'seconds');
+    const expiryDate = dayjs().add(10, 'days');
     await this.userService.setRefreshToken(
       userId,
       refreshToken,
