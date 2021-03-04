@@ -1,14 +1,24 @@
 import { Schema } from 'mongoose';
 
 export const UserRef = 'users';
-export const UserSchema = new Schema({
-  username: {
-    type: String,
-    unique: true,
-    required: true,
+export const UserSchema = new Schema(
+  {
+    username: {
+      type: String,
+      unique: true,
+      required: true,
+    },
+    password: {
+      type: String,
+      required: true,
+    },
+    role: {
+      type: String,
+    },
+    firstName: String,
+    lastName: String,
+    refreshToken: String,
+    refreshTokenExpires: Date,
   },
-  password: {
-    type: String,
-    required: true,
-  },
-});
+  { timestamps: true },
+);

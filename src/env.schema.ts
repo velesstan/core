@@ -7,6 +7,9 @@ export const ENV_SCHEMA = Joi.object({
   MONGO_INITDB_ROOT_PASSWORD: Joi.string().required(),
   DB_HOST: Joi.string().required(),
   DB_NAME: Joi.string().required(),
+  NODE_ENV: Joi.string()
+    .valid('production', 'development', 'testing')
+    .required(),
 });
 
 export default () => {
