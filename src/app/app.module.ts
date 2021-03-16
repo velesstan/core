@@ -1,6 +1,8 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
+
+import { DelayMiddleware } from 'src/common/middlewares';
 
 import { UserModule } from 'src/user';
 import { AuthModule } from 'src/auth';
@@ -38,4 +40,8 @@ import { AppService } from './app.service';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(DelayMiddleware).forRoutes('*');
+  }
+}

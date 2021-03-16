@@ -5,7 +5,8 @@ import { Model } from 'mongoose';
 import { Role } from 'src/common/enums';
 import { User, UserModel } from 'src/common/interfaces';
 import { UserRef } from 'src/common/schemas';
-import { CreateUserDto, FindUsersDto } from './dto';
+
+import { CreateUserDto, FindUsersDto, UpdateUserDto } from './dto';
 
 @Injectable()
 export class UserService {
@@ -29,11 +30,23 @@ export class UserService {
   }
 
   async find(query: FindUsersDto): Promise<User[]> {
-    return await this.userModel.find(query).exec();
+    const { _id, username } = query;
+    return await this.userModel
+      .find({
+        ...(_id ? { _id } : {}),
+        ...(username ? { username } : {}),
+      })
+      .exec();
   }
 
   async create(user: CreateUserDto): Promise<User> {
     return await new this.userModel(user).save();
+  }
+
+  async update(userId: string, user: UpdateUserDto): Promise<User | null> {
+    return await this.userModel
+      .findByIdAndUpdate(userId, user, { new: true })
+      .exec();
   }
 
   async findById(id: string): Promise<UserModel | null> {
