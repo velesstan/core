@@ -6,6 +6,7 @@ import { DelayMiddleware } from 'src/common/middlewares';
 
 import { UserModule } from 'src/user';
 import { AuthModule } from 'src/auth';
+import { ERPModule } from 'src/erp';
 import CONFIG, { ENV_SCHEMA } from 'src/env.schema';
 
 import { AppController } from './app.controller';
@@ -36,6 +37,7 @@ import { AppService } from './app.service';
     }),
     AuthModule,
     UserModule,
+    ERPModule,
   ],
   controllers: [AppController],
   providers: [AppService],
