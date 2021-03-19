@@ -14,7 +14,7 @@ export const WaybillSchema = new Schema({
     required: true,
   },
   type: {
-    type: String,
+    type: [String],
     required: true,
   },
   source: {

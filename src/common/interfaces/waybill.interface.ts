@@ -2,7 +2,10 @@ import { Document } from 'mongoose';
 
 import { WaybillAction, WaybillType } from 'src/common/enums';
 
-import { TransactionModel } from './transaction.interface';
+import {
+  TransactionModel,
+  TransactionPopulated,
+} from './transaction.interface';
 
 interface Item {
   readonly product: string;
@@ -12,22 +15,24 @@ interface BaseWaybill {
   readonly products: Array<Item>;
 }
 
-export interface Waybill {
+export interface Waybill extends BaseWaybill {
   readonly user: string;
   readonly source?: string;
   readonly destination?: string;
-  readonly serialNumber: number;
+  
   readonly action: WaybillAction;
   readonly type: WaybillType;
-  readonly products: Item[];
   readonly date?: Date;
 }
 export interface WaybillModel extends Waybill, Document {
   readonly createdAt: Date;
   readonly date: Date;
   readonly transactions: TransactionModel[];
+  readonly serialNumber: number;
 }
-
+export interface WaybillPopulated extends Omit<WaybillModel, 'transactions'> {
+  readonly transactions: TransactionPopulated[];
+}
 export interface WaybillCounterModel extends Document {
   readonly serialNumber: number;
 }

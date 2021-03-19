@@ -1,3 +1,6 @@
 Validation & custom errors:
     mongoose schemas
     DTO
+
+Scripts
+    transaction merge (remove active, add type/action, serialnumber)

@@ -87,7 +87,10 @@ export class WaybillService {
           ],
         },
         {
-          path: 'stock',
+          path: 'source',
+        },
+        {
+          path: 'destination',
         },
         {
           path: 'user',

@@ -4,6 +4,8 @@ import { MongooseModule } from '@nestjs/mongoose';
 import {
   CategoryRef,
   CategorySchema,
+  HolderRef,
+  HolderSchema,
   ProductRef,
   ProductSchema,
   TransactionRef,
@@ -27,6 +29,7 @@ import { WaybillService } from './waybill.service';
     MongooseModule.forFeature([
       { name: CategoryRef, schema: CategorySchema },
       { name: ProductRef, schema: ProductSchema },
+      { name: HolderRef, schema: HolderSchema },
       { name: WaybillRef, schema: WaybillSchema },
       { name: WaybillCounterRef, schema: WaybillCounterSchema },
       { name: TransactionRef, schema: TransactionSchema },

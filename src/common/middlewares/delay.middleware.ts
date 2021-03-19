@@ -4,7 +4,7 @@ import { Request, Response, NextFunction } from 'express';
 @Injectable()
 export class DelayMiddleware implements NestMiddleware {
   async use(request: Request, response: Response, next: NextFunction) {
-    await this.delay(2);
+    await this.delay(0);
     next();
   }
 
