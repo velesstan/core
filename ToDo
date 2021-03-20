@@ -4,3 +4,6 @@ Validation & custom errors:
 
 Scripts
     transaction merge (remove active, add type/action, serialnumber)
+
+WB SerialNumber -> UNIQUE
+// delete waybill + transactions

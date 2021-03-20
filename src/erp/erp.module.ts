@@ -18,6 +18,8 @@ import {
 
 import { CategoryController } from './category.controller';
 import { CategoryService } from './category.service';
+import { HolderController } from './holder.controller';
+import { HolderService } from './holder.service';
 import { ProductController } from './product.controller';
 import { ProductService } from './product.service';
 import { TransactionService } from './transaction.service';
@@ -35,10 +37,16 @@ import { WaybillService } from './waybill.service';
       { name: TransactionRef, schema: TransactionSchema },
     ]),
   ],
-  controllers: [CategoryController, ProductController, WaybillController],
+  controllers: [
+    CategoryController,
+    ProductController,
+    HolderController,
+    WaybillController,
+  ],
   providers: [
     CategoryService,
     ProductService,
+    HolderService,
     WaybillService,
     TransactionService,
   ],
