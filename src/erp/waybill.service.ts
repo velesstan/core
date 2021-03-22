@@ -60,11 +60,11 @@ export class WaybillService {
   }
 
   async find(query: FindWaybillDto): Promise<WaybillModel[]> {
-    const { start, end, stock, ...rest } = query;
+    const { start, end, holder, ...rest } = query;
     return await this.waybillModel
       .find({
+        $or: [{ source: holder }, { destination: holder }],
         ...rest,
-        ...(stock ? { stock } : {}),
         ...(end
           ? {
               createdAt: {

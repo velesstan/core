@@ -1,5 +1,7 @@
 import { Schema } from 'mongoose';
 
+import { WaybillAction } from 'src/common/enums';
+
 import { ProductRef } from './product.schema';
 import { HolderRef } from './holder.schema';
 
@@ -20,6 +22,15 @@ export const TransactionSchema = new Schema({
   holder: {
     type: Schema.Types.ObjectId,
     ref: HolderRef,
+    required: true,
+  },
+  action: {
+    type: String,
+    enum: WaybillAction,
+    required: true,
+  },
+  waybill: {
+    type: Number,
     required: true,
   },
   createdAt: {

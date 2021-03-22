@@ -17,7 +17,7 @@ export class FindWaybillDto {
 
   @IsString()
   @IsOptional()
-  readonly stock?: string;
+  readonly holder?: string;
 
   @IsDate()
   @IsOptional()

@@ -56,7 +56,6 @@ export class TransactionService {
     const aggregated = await this.transactionModel.aggregate([
       {
         $match: {
-          active: true,
           ...(stock ? { stock: new ObjectId(stock) } : {}),
           ...(end
             ? {
