@@ -2,7 +2,7 @@ import { Transform } from 'class-transformer';
 import { IsString, IsOptional, IsDate } from 'class-validator';
 import dayjs from 'dayjs';
 
-export class FindTransactionsDto {
+export class FindBalancesDto {
   @IsString()
   @IsOptional()
   readonly code?: string;

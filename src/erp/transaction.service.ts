@@ -10,8 +10,8 @@ import {
 } from 'src/common/interfaces';
 import { ProductRef, TransactionRef } from 'src/common/schemas';
 
-import { FindTransactionsDto } from './dto/transaction';
 import { WaybillAction } from 'src/common/enums';
+import { FindBalancesDto } from './dto/balances';
 
 @Injectable()
 export class TransactionService {
@@ -51,7 +51,7 @@ export class TransactionService {
     await this.transactionModel.findByIdAndDelete(transactionId).exec();
   }
 
-  async count(query: FindTransactionsDto) {
+  async countBalances(query: FindBalancesDto) {
     const { stock, start, end, code, category } = query;
     const aggregated = await this.transactionModel.aggregate([
       {

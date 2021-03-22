@@ -15,13 +15,14 @@ import {
   WaybillRef,
   WaybillSchema,
 } from 'src/common/schemas';
-
+import { BalancesController } from './balances.controller';
 import { CategoryController } from './category.controller';
 import { CategoryService } from './category.service';
 import { HolderController } from './holder.controller';
 import { HolderService } from './holder.service';
 import { ProductController } from './product.controller';
 import { ProductService } from './product.service';
+import { TransactionController } from './transaction.controller';
 import { TransactionService } from './transaction.service';
 import { WaybillController } from './waybill.controller';
 import { WaybillService } from './waybill.service';
@@ -42,6 +43,8 @@ import { WaybillService } from './waybill.service';
     ProductController,
     HolderController,
     WaybillController,
+    TransactionController,
+    BalancesController,
   ],
   providers: [
     CategoryService,
