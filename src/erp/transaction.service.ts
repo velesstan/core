@@ -52,15 +52,15 @@ export class TransactionService {
   }
 
   async countBalances(query: FindBalancesDto) {
-    const { stock, start, end, code, category } = query;
+    const { stock, startDate, endDate, code, category } = query;
     const aggregated = await this.transactionModel.aggregate([
       {
         $match: {
           ...(stock ? { stock: new ObjectId(stock) } : {}),
-          ...(end
+          ...(endDate
             ? {
                 createdAt: {
-                  $lte: end,
+                  $lte: endDate,
                 },
               }
             : {}),
@@ -71,7 +71,7 @@ export class TransactionService {
           _id: '$product',
           startBalance: {
             $sum: {
-              $cond: [{ $lte: ['$createdAt', start] }, '$quantity', 0],
+              $cond: [{ $lte: ['$createdAt', startDate] }, '$quantity', 0],
             },
           },
           endBalance: {
@@ -82,7 +82,7 @@ export class TransactionService {
               $cond: [
                 {
                   $and: [
-                    ...(start ? [{ $gte: ['$createdAt', start] }] : []),
+                    ...(startDate ? [{ $gte: ['$createdAt', startDate] }] : []),
                     { $gt: ['$quantity', 0] },
                   ],
                 },
@@ -96,8 +96,8 @@ export class TransactionService {
               $cond: [
                 {
                   $and: [
-                    ...(start ? [{ $gte: ['$createdAt', start] }] : []),
-                    { $gte: ['$createdAt', start] },
+                    ...(startDate ? [{ $gte: ['$createdAt', startDate] }] : []),
+                    { $gte: ['$createdAt', startDate] },
                     { $lt: ['$quantity', 0] },
                   ],
                 },

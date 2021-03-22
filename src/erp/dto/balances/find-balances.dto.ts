@@ -18,10 +18,10 @@ export class FindBalancesDto {
   @IsOptional()
   @IsDate()
   @Transform(({ value }) => dayjs.utc(value).startOf('day').toDate())
-  readonly start?: Date;
+  readonly startDate?: Date;
 
   @IsOptional()
   @IsDate()
   @Transform(({ value }) => dayjs.utc(value).endOf('day').toDate())
-  readonly end?: Date;
+  readonly endDate?: Date;
 }
