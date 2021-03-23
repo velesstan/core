@@ -23,7 +23,7 @@ export class TransactionService {
 
   async create(
     transaction: Transaction,
-    reduce: boolean = false,
+    reduce = false,
   ): Promise<TransactionModel> {
     const { action, type, product, quantity, holder } = transaction;
 

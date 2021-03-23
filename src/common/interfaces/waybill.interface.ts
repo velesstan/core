@@ -19,7 +19,6 @@ export interface Waybill extends BaseWaybill {
   readonly user: string;
   readonly source?: string;
   readonly destination?: string;
-  
   readonly action: WaybillAction;
   readonly type: WaybillType;
   readonly date?: Date;

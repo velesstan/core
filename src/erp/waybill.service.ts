@@ -225,7 +225,7 @@ export class WaybillService {
         const outcomeTransactions: TransactionModel[] = [];
         for (let i = 0; i < populatedProducts.length; i++) {
           for (let j = 0; j < populatedProducts[i].requires.length; j++) {
-            let transaction = await this.transactionService.create({
+            const transaction = await this.transactionService.create({
               action,
               type,
               product: populatedProducts[i].requires[j].product,
