@@ -1,5 +1,14 @@
-import { Controller, Get, Header, Res } from '@nestjs/common';
-import { Response } from 'express';
+import {
+  Controller,
+  Get,
+  Header,
+  Post,
+  Res,
+  UploadedFile,
+  UseInterceptors,
+} from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { Response, Express } from 'express';
 
 import { DatabaseBackupService } from './database-backup.service';
 
@@ -9,8 +18,16 @@ export class DatabaseBackupController {
 
   @Get('database')
   @Header('Content-Type', 'application/x-binary')
-  getHello(@Res() response: Response) {
+  async backupDatabase(@Res() response: Response) {
     response.setHeader('Content-Disposition', 'attachment; filename=db.dump');
     this.backupService.dumpDatabase().pipe(response);
+  }
+
+  @Post('database')
+  @UseInterceptors(FileInterceptor('file'))
+  async restoreDatabase(
+    @UploadedFile() dabataseDump: Express.Multer.File,
+  ): Promise<void> {
+    return await this.backupService.restoreDatabase(dabataseDump);
   }
 }

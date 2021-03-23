@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { spawn } from 'child_process';
-import { Transform } from 'stream';
+import { PassThrough } from 'stream';
 
 @Injectable()
 export class DatabaseBackupService {
@@ -13,12 +13,8 @@ export class DatabaseBackupService {
     this.DB_USER = configService.get('MONGO_INITDB_ROOT_USERNAME')!;
   }
 
-  dumpDatabase(): Transform {
-    const stream = new Transform();
-    stream._transform = function (chunk, encoding, done) {
-      this.push(chunk);
-      done();
-    };
+  dumpDatabase(): PassThrough {
+    const stream = new PassThrough();
     const docker = spawn('docker-compose', [
       'exec',
       '-T',
@@ -30,5 +26,24 @@ export class DatabaseBackupService {
     docker.stdout.pipe(stream);
     docker.on('exit', () => stream.end());
     return stream;
+  }
+
+  async restoreDatabase(file: Express.Multer.File): Promise<void> {
+    return new Promise((resolve, reject) => {
+      const stream = new PassThrough();
+      const docker = spawn('docker-compose', [
+        'exec',
+        '-T',
+        'database',
+        'sh',
+        '-c',
+        `mongorestore --archive --drop  -u ${this.DB_USER} -p ${this.DB_PASSWORD} --authenticationDatabase admin < /dev/stdin`,
+      ]);
+      stream.pipe(docker.stdin);
+      stream.end(Buffer.from(file.buffer));
+      stream.on('close', () => {
+        resolve();
+      });
+    });
   }
 }
