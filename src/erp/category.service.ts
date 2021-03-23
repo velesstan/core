@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
@@ -18,8 +18,11 @@ export class CategoryService {
     return await this.categoryModel.find({}).exec();
   }
 
-  async getById(id: string): Promise<CategoryModel | null> {
-    return await this.categoryModel.findById(id).exec();
+  async getById(id: string): Promise<CategoryModel> {
+    const $category = await this.categoryModel.findById(id).exec();
+    if ($category) return $category;
+    else
+      throw new HttpException('Resource doesnt exist', HttpStatus.BAD_REQUEST);
   }
 
   async create(category: CreateCategoryDto): Promise<CategoryModel> {

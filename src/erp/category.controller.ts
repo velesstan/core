@@ -24,6 +24,12 @@ export class CategoryController {
   async find(): Promise<CategoryModel[]> {
     return await this.categoryService.find();
   }
+
+  @Get('/:id')
+  async findById(@Param('id') id: string): Promise<CategoryModel> {
+    return await this.categoryService.getById(id);
+  }
+
   @Post('/')
   async createCategory(
     @Body() category: CreateCategoryDto,
