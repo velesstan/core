@@ -11,6 +11,8 @@ import CONFIG, { ENV_SCHEMA } from 'src/env.schema';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { DatabaseBackupService } from './backup/database-backup.service';
+import { DatabaseBackupController } from './backup/database-backup.controller';
 
 @Module({
   imports: [
@@ -39,8 +41,8 @@ import { AppService } from './app.service';
     UserModule,
     ERPModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [AppController, DatabaseBackupController],
+  providers: [AppService, DatabaseBackupService],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
