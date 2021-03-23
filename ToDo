@@ -1,9 +1,3 @@
 Validation & custom errors:
     mongoose schemas
     DTO
-
-Scripts
-    transaction merge (remove active, add type/action, serialnumber)
-
-WB SerialNumber -> UNIQUE
-// delete waybill + transactions
