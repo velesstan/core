@@ -30,12 +30,19 @@ export class ProductController {
   async find(@Query() query: FindProductDto): Promise<ProductModel[]> {
     return await this.productService.find(query);
   }
+
+  @Get('/:id')
+  async findById(@Param('id') id: string): Promise<ProductModel> {
+    return await this.productService.getById(id);
+  }
+
   @Post('/')
   async createProduct(
     @Body() product: CreateProductDto,
   ): Promise<ProductModel> {
     return await this.productService.create(product);
   }
+
   @Put('/:id')
   async updateProduct(
     @Param('id') id: string,
@@ -43,6 +50,7 @@ export class ProductController {
   ) {
     return await this.productService.updateById(id, product);
   }
+
   @Delete('/:id')
   async removeProduct(@Param('id') id: string) {
     return await this.productService.removeById(id);

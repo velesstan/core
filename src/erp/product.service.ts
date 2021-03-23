@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
@@ -27,8 +27,11 @@ export class ProductService {
       .exec();
   }
 
-  async getById(id: string): Promise<ProductModel | null> {
-    return await this.productModel.findById(id).exec();
+  async getById(id: string): Promise<ProductModel> {
+    const $product = await this.productModel.findById(id).exec();
+    if ($product) return $product;
+    else
+      throw new HttpException('Resource doesnt exist', HttpStatus.BAD_REQUEST);
   }
 
   async create(product: Product): Promise<ProductModel> {
