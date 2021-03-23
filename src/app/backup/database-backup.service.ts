@@ -37,7 +37,7 @@ export class DatabaseBackupService {
         'database',
         'sh',
         '-c',
-        `mongorestore --archive --drop  -u ${this.DB_USER} -p ${this.DB_PASSWORD} --authenticationDatabase admin < /dev/stdin`,
+        `mongorestore --archive --drop -u ${this.DB_USER} -p ${this.DB_PASSWORD} --authenticationDatabase admin < /dev/stdin`,
       ]);
       stream.pipe(docker.stdin);
       stream.end(Buffer.from(file.buffer));
