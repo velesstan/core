@@ -63,8 +63,10 @@ export class WaybillService {
     const { startDate, endDate, holder, ...rest } = query;
     return await this.waybillModel
       .find({
-        $or: [{ source: holder }, { destination: holder }],
         ...rest,
+        ...(holder
+          ? { $or: [{ source: holder }, { destination: holder }] }
+          : {}),
         ...(endDate
           ? {
               createdAt: {

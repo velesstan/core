@@ -3,8 +3,12 @@ export default async (__db) => {
   let HOLDER_DB = __db.collection('holderrefs');
   return new Promise(async (resolve, reject) => {
     const stocks = await DB.find({}).toArray();
-    await HOLDER_DB.drop();
-    DB.dropIndexes();
+    try {
+      await HOLDER_DB.deleteMany();
+    } catch (e) {
+      console.log(e);
+    }
+    // DB.dropIndexes();
     for (let i = 0; i < stocks.length; i++) {
       try {
         await HOLDER_DB.insertOne({
@@ -14,12 +18,13 @@ export default async (__db) => {
           updatedAt: stocks[i].updatedAt,
           type: 'stock',
         });
+        await DB.deleteOne({ _id: stocks[i]._id });
       } catch (e) {
         console.log(stocks[i]);
         throw e;
       }
     }
-    await DB.drop();
+
     resolve();
   });
 };

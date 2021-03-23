@@ -13,25 +13,29 @@ export class AuthService {
     private readonly userService: UserService,
   ) {}
 
-  async signIn(credentials: SignInDto): Promise<{ accessToken: string }> {
+  async signIn(
+    credentials: SignInDto,
+  ): Promise<{ accessToken: string; refreshToken: string }> {
     const user = await this.userService.findByUsername(credentials.username);
     if (user && user.password === credentials.password) {
-      const { password, refreshTokenExpires, ...payload } = user.toObject();
-      const refreshToken = await this.generateRefreshToken(user._id);
+      const {
+        password,
+        refreshToken,
+        refreshTokenExpires,
+        ...payload
+      } = user.toObject();
       return {
-        accessToken: this.jwtService.sign({
-          ...payload,
-          refreshToken,
-        }),
+        accessToken: this.jwtService.sign(payload),
+        refreshToken: await this.generateRefreshToken(user._id),
       };
     }
     throw new UnauthorizedException();
   }
 
-  async refreshToken(
+  async refreshSession(
     userId: string,
     token: string,
-  ): Promise<{ accessToken: string }> {
+  ): Promise<{ accessToken: string; refreshToken: string }> {
     const user = await this.userService.findById(userId);
     if (user) {
       if (user.toObject().refreshToken !== token) {
@@ -40,10 +44,15 @@ export class AuthService {
       if (dayjs().diff(dayjs(user.refreshTokenExpires), 'seconds') > 10) {
         throw new UnauthorizedException();
       }
-      const { password, refreshTokenExpires, ...payload } = user.toObject();
-      const refreshToken = await this.generateRefreshToken(userId);
+      const {
+        password,
+        refreshToken,
+        refreshTokenExpires,
+        ...payload
+      } = user.toObject();
       return {
-        accessToken: this.jwtService.sign({ ...payload, refreshToken }),
+        accessToken: this.jwtService.sign(payload),
+        refreshToken: await this.generateRefreshToken(userId),
       };
     } else {
       throw new UnauthorizedException();

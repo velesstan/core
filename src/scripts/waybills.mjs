@@ -17,43 +17,28 @@ export default async (__db) => {
     for (let i = 1; i <= lastSerialNumber; i++) {
       const wbData = await getWaybill(i);
       if (wbData.length === 2) {
-        if (wbData[0].action === 'PRODUCTION') {
-          const newWaybill = Object.assign({}, wbData[0], {
-            transactions: [
-              ...wbData[0].transactions,
-              ...wbData[1].transactions,
-            ],
-            source: wbData[0].stock,
-            destination: wbData[1].stock,
-            type: [wbData[0].type, wbData[1].type],
-            createdAt: wbData[0].createdAt,
-            updatedAt: wbData[0].updatedAt,
-          });
-          delete newWaybill.active;
-          delete newWaybill.stock;
-          delete newWaybill._id;
-          delete newWaybill.__v;
-          await DB.deleteMany({ serialNumber: i });
-          await DB.insertOne(newWaybill);
-        }
-        if (wbData[0].action === 'MOVE') {
-          const outcomeWB = wbData.find((w) => w.type === 'OUTCOME');
-          const incomeWB = wbData.find((w) => w.type === 'INCOME');
-          const newWaybill = Object.assign({}, wbData[0], {
+        // MOVE OR PRODUCTION
+        const incomeWB = wbData.find((w) => w.type === 'INCOME');
+        const outcomeWB = wbData.find((w) => w.type === 'OUTCOME');
+        if (!incomeWB) throw 'E';
+        if (!outcomeWB) throw 'E';
+        const newWaybill = Object.assign(
+          {},
+          {
+            serialNumber: incomeWB.serialNumber,
+            action: incomeWB.action,
+            type: [incomeWB.type, outcomeWB.type],
             transactions: [...incomeWB.transactions, ...outcomeWB.transactions],
             source: outcomeWB.stock,
             destination: incomeWB.stock,
-            type: [incomeWB.type, outcomeWB.type],
             createdAt: incomeWB.createdAt,
             updatedAt: incomeWB.updatedAt,
-          });
-          delete newWaybill.active;
-          delete newWaybill.stock;
-          delete newWaybill._id;
-          delete newWaybill.__v;
-          await DB.deleteMany({ serialNumber: i });
-          await DB.insertOne(newWaybill);
-        }
+            user: incomeWB.user,
+          },
+        );
+        await DB.deleteMany({ serialNumber: i });
+        await DB.insertOne(newWaybill);
+
         // break;
       } else if (wbData.length === 1) {
         // transform single

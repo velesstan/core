@@ -21,14 +21,14 @@ export class AuthController {
     return await this.authService.signIn(credentials);
   }
 
-  @Post('/refreshToken')
-  async refreshToken(
+  @Post('/refreshSession')
+  async refreshSession(
     @Headers('authorization') authorization: string,
-  ): Promise<{ accessToken: string }> {
+    @Body('refreshToken') refreshToken: string,
+  ): Promise<{ accessToken: string; refreshToken: string }> {
     try {
       const payload = decode<any>(authorization.split(' ')[1]);
-      const { _id, refreshToken } = payload;
-      return await this.authService.refreshToken(_id, refreshToken);
+      return await this.authService.refreshSession(payload._id, refreshToken);
     } catch (e) {
       throw new UnauthorizedException();
     }
