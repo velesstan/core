@@ -1,6 +1,7 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import randtoken from 'rand-token';
+import bcrypt from 'bcrypt';
 import dayjs from 'dayjs';
 
 import { UserService } from 'src/user/user.service';
@@ -17,7 +18,7 @@ export class AuthService {
     credentials: SignInDto,
   ): Promise<{ accessToken: string; refreshToken: string }> {
     const user = await this.userService.findByUsername(credentials.username);
-    if (user && user.password === credentials.password) {
+    if (user && (await bcrypt.compare(credentials.password, user.password))) {
       const {
         password,
         refreshToken,

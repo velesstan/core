@@ -1,3 +1,5 @@
+import bcrypt from 'bcrypt';
+
 export default async (__db) => {
   const DB = __db.collection('userrefs');
 
@@ -9,7 +11,11 @@ export default async (__db) => {
         await DB.updateOne(
           { _id: users[i]._id },
           {
-            ...(users[i].email ? { $set: { username: users[i].email } } : {}),
+            $set: {
+              username: users[i].email,
+              role: users[i].email == 'admin@veles.services' ? 'admin' : 'user',
+              password: await bcrypt.hash(users[i].password, 10),
+            },
             $unset: {
               email: '',
             },
