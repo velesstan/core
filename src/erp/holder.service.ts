@@ -4,7 +4,11 @@ import { Model } from 'mongoose';
 
 import { HolderModel } from 'src/common/interfaces';
 import { HolderRef } from 'src/common/schemas';
-import { CreateHolderDto, UpdateHolderDto } from './dto/holder';
+import {
+  CreateHolderDto,
+  FindHoldersQueryDto,
+  UpdateHolderDto,
+} from './dto/holder';
 
 @Injectable()
 export class HolderService {
@@ -12,8 +16,14 @@ export class HolderService {
     @InjectModel(HolderRef) private readonly holderModel: Model<HolderModel>,
   ) {}
 
-  async find(): Promise<HolderModel[]> {
-    return await this.holderModel.find().exec();
+  async find(query: FindHoldersQueryDto): Promise<HolderModel[]> {
+    const { title, ...rest } = query;
+    return await this.holderModel
+      .find({
+        ...rest,
+        ...(title ? { title: new RegExp(`${title}`, 'i') } : {}),
+      })
+      .exec();
   }
 
   async findById(id: string): Promise<HolderModel> {

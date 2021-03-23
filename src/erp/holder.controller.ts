@@ -6,10 +6,15 @@ import {
   Param,
   Post,
   Put,
+  Query,
 } from '@nestjs/common';
 
 import { HolderModel } from 'src/common/interfaces';
-import { CreateHolderDto, UpdateHolderDto } from './dto/holder';
+import {
+  CreateHolderDto,
+  FindHoldersQueryDto,
+  UpdateHolderDto,
+} from './dto/holder';
 import { HolderService } from './holder.service';
 
 @Controller('holders')
@@ -17,8 +22,8 @@ export class HolderController {
   constructor(private readonly holderService: HolderService) {}
 
   @Get('/')
-  async find(): Promise<HolderModel[]> {
-    return await this.holderService.find();
+  async find(@Query() query: FindHoldersQueryDto): Promise<HolderModel[]> {
+    return await this.holderService.find(query);
   }
 
   @Get('/:id')
