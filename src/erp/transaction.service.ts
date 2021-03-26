@@ -25,7 +25,7 @@ export class TransactionService {
     transaction: Transaction,
     reduce = false,
   ): Promise<TransactionModel> {
-    const { action, type, product, quantity, holder } = transaction;
+    const { action, type, product, quantity, holder, createdAt } = transaction;
 
     const populatedProduct = await this.productModel.findById(product);
 

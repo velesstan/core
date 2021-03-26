@@ -9,8 +9,10 @@ import {
   IsEnum,
   ArrayMinSize,
   IsBoolean,
+  IsDate,
 } from 'class-validator';
-import { Type } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
+import dayjs from 'dayjs';
 
 import { WaybillAction } from 'src/common/enums';
 
@@ -39,6 +41,10 @@ export class CreateWaybillDto {
   @IsEnum(WaybillAction)
   @IsNotEmpty()
   readonly action: WaybillAction;
+  @IsOptional()
+  @IsDate()
+  @Transform(({ value }) => dayjs.utc(value).toDate())
+  readonly createdAt: Date;
   @IsString()
   @IsNotEmpty()
   readonly user: string;

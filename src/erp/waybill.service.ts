@@ -150,7 +150,7 @@ export class WaybillService {
   }
 
   async update(id: string, waybill: TWaybill): Promise<WaybillModel> {
-    const { action, user, products, ...rest } = waybill;
+    const { action, user, products, createdAt, ...rest } = waybill;
     const $waybill = await this.waybillModel.findById(id);
     if ($waybill) {
       await Promise.all(
@@ -167,6 +167,7 @@ export class WaybillService {
             action,
             user,
             type,
+            createdAt,
             source: holders.source,
             destination: holders.destination,
             transactions: transactions.map((t) => t._id),
@@ -188,6 +189,7 @@ export class WaybillService {
   }
 
   async prepareTransactions(waybill: TWaybill): Promise<TransactionModel[]> {
+    const { createdAt } = waybill;
     switch (waybill.action) {
       case WaybillAction.BUY:
       case WaybillAction.IMPORT: {
@@ -197,6 +199,7 @@ export class WaybillService {
             this.transactionService.create({
               type: WaybillType.INCOME,
               holder: destination,
+              createdAt,
               action,
               product,
               quantity,
@@ -207,13 +210,14 @@ export class WaybillService {
       }
       case WaybillAction.SELL:
       case WaybillAction.UTILIZATION: {
-        const { action, products, source } = waybill;
+        const { action, products, source, createdAt } = waybill;
         const transactions = await Promise.all(
           products.map(({ product, quantity }) =>
             this.transactionService.create({
               type: WaybillType.OUTCOME,
               holder: source,
               quantity: -quantity,
+              createdAt,
               action,
               product,
             }),
@@ -222,13 +226,14 @@ export class WaybillService {
         return transactions;
       }
       case WaybillAction.MOVE: {
-        const { action, products, source, destination } = waybill;
+        const { action, products, source, destination, createdAt } = waybill;
         const outcomeTransactions = await Promise.all(
           products.map(({ product, quantity }) =>
             this.transactionService.create({
               type: WaybillType.OUTCOME,
               holder: source,
               quantity: -quantity,
+              createdAt,
               action,
               product,
             }),
@@ -239,6 +244,7 @@ export class WaybillService {
             this.transactionService.create({
               type: WaybillType.INCOME,
               holder: destination,
+              createdAt,
               action,
               product,
               quantity,
@@ -248,7 +254,7 @@ export class WaybillService {
         return [...incomeTransactions, ...outcomeTransactions];
       }
       case WaybillAction.PRODUCTION: {
-        const { action, products, source, destination } = waybill;
+        const { action, products, source, destination, createdAt } = waybill;
         const populatedProducts = await Promise.all(
           products.map(async (p) => {
             const product = await this.productService.getById(p.product);
@@ -268,6 +274,7 @@ export class WaybillService {
               type: WaybillType.OUTCOME,
               holder: source,
               action,
+              createdAt,
               product: populatedProducts[i].requires[j].product,
               quantity:
                 -populatedProducts[i].requires[j].quantity *
@@ -281,6 +288,7 @@ export class WaybillService {
             this.transactionService.create({
               type: WaybillType.INCOME,
               holder: destination,
+              createdAt,
               action,
               product,
               quantity,

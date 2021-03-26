@@ -15,6 +15,7 @@ export interface Transaction {
   readonly holder: string;
   readonly product: string;
   readonly quantity: number;
+  readonly createdAt?: Date;
 }
 export interface TransactionModel extends Transaction, Document {
   readonly createdAt: Date;

@@ -12,6 +12,7 @@ interface Item {
   readonly quantity: number;
 }
 interface BaseWaybill {
+  readonly createdAt: Date;
   readonly user: string;
   readonly products: Array<Item>;
 }
