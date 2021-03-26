@@ -41,12 +41,15 @@ export class CreateWaybillDto {
   readonly action: WaybillAction;
   @IsString()
   @IsNotEmpty()
-  @IsOptional()
-  readonly source?: string;
+  readonly user: string;
   @IsString()
   @IsNotEmpty()
   @IsOptional()
-  readonly destination?: string;
+  readonly source: string;
+  @IsString()
+  @IsNotEmpty()
+  @IsOptional()
+  readonly destination: string;
   @IsArray()
   @ArrayMinSize(1)
   @ValidateNested({ each: true })

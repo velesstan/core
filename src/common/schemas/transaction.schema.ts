@@ -1,6 +1,6 @@
 import { Schema } from 'mongoose';
 
-import { WaybillAction } from 'src/common/enums';
+import { WaybillAction, WaybillType } from 'src/common/enums';
 
 import { ProductRef } from './product.schema';
 import { HolderRef } from './holder.schema';
@@ -29,8 +29,9 @@ export const TransactionSchema = new Schema({
     enum: WaybillAction,
     required: true,
   },
-  waybill: {
-    type: Number,
+  type: {
+    type: String,
+    enum: WaybillType,
     required: true,
   },
   createdAt: {
