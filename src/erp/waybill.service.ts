@@ -150,7 +150,7 @@ export class WaybillService {
   }
 
   async update(id: string, waybill: TWaybill): Promise<WaybillModel> {
-    const { action, user } = waybill;
+    const { action, user, products, ...rest } = waybill;
     const $waybill = await this.waybillModel.findById(id);
     if ($waybill) {
       await Promise.all(
@@ -167,7 +167,8 @@ export class WaybillService {
             action,
             user,
             type,
-            holders,
+            source: holders.source,
+            destination: holders.destination,
             transactions: transactions.map((t) => t._id),
           },
         })
