@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   nginx:
-    image: jonasal/nginx-certbot:latest
+    image: staticfloat/nginx-certbot
     restart: unless-stopped
     ports:
       - 80:80
