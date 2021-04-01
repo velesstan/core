@@ -16,16 +16,19 @@ export default async (__db) => {
     for (let i = 0; i < waybills.length; i++) {
       const { action, type, transactions } = waybills[i];
       for (let j = 0; j < transactions.length; j++) {
+        const $t = await getTransaction(transactions[j]);
         await TRANSACTIONS.updateOne(
           { _id: transactions[j] },
           {
             $set: {
               action,
               waybill: waybills[i].serialNumber,
+              holder: $t.stock,
             },
             $unset: {
               active: '',
               type: '',
+              holder: '',
             },
           },
         );
