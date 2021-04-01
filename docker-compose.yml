@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   nginx:
-    image: staticfloat/nginx-certbot
+    image: jonasal/nginx-certbot:latest
     restart: unless-stopped
     ports:
       - 80:80
@@ -25,6 +25,7 @@ services:
 
   dashboard:
     image: velesstan/dashboard:edge
+    restart: always
     ports:
       - 8080:80
 
