@@ -1,6 +1,17 @@
 version: '3.8'
 
 services:
+  nginx:
+    image: staticfloat/nginx-certbot
+    restart: unless-stopped
+    ports:
+      - 80:80
+      - 443:443
+    environment:
+      CERTBOT_EMAIL: evgheni.calcutin@gmail.com
+    volumes:
+      - ./nginx:/etc/nginx/user.conf.d:ro
+      - letsencrypt:/etc/letsencrypt
   database:
     image: mongo:4.2.10
     restart: always
@@ -11,3 +22,28 @@ services:
     env_file: app.env
     ports:
       - '27017:27017'
+
+  dashboard:
+    image: velesstan/dashboard:edge
+    ports:
+      - 8080:80
+
+  core:
+    image: velesstan/core:edge
+    restart: always
+    ports:
+      - 3000:3000
+    env_file: app.env
+    depends_on:
+      - database
+
+  watchtower:
+    image: containrrr/watchtower
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /root/.docker/config.json:/config.json
+    command: --interval 300 --cleanup
+
+volumes:
+  letsencrypt:

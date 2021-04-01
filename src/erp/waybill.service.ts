@@ -1,6 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import dayjs from 'dayjs';
 
 import {
   WaybillModel,
@@ -132,7 +133,7 @@ export class WaybillService {
   }
 
   async create(waybill: TWaybill): Promise<WaybillModel> {
-    const { action, user } = waybill;
+    const { action, user, createdAt } = waybill;
     const serialNumber = await this.nextWaybillSerialNumber();
 
     const transactions = await this.prepareTransactions(waybill);
@@ -145,6 +146,11 @@ export class WaybillService {
       serialNumber,
       user,
       ...holders,
+      createdAt: dayjs()
+        .set('year', createdAt.getFullYear())
+        .set('month', createdAt.getMonth())
+        .set('date', createdAt.getDate())
+        .toDate(),
     }).save();
     return $waybill;
   }
@@ -167,7 +173,11 @@ export class WaybillService {
             action,
             user,
             type,
-            createdAt,
+            createdAt: dayjs()
+              .set('year', createdAt.getFullYear())
+              .set('month', createdAt.getMonth())
+              .set('date', createdAt.getDate())
+              .toDate(),
             source: holders.source,
             destination: holders.destination,
             transactions: transactions.map((t) => t._id),

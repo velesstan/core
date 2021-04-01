@@ -9,7 +9,7 @@ export class FindBalancesDto {
 
   @IsString()
   @IsOptional()
-  readonly stock?: string;
+  readonly holder?: string;
 
   @IsString()
   @IsOptional()

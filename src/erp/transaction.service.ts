@@ -52,11 +52,11 @@ export class TransactionService {
   }
 
   async countBalances(query: FindBalancesDto) {
-    const { stock, startDate, endDate, code, category } = query;
+    const { holder, startDate, endDate, code, category } = query;
     const aggregated = await this.transactionModel.aggregate([
       {
         $match: {
-          ...(stock ? { stock: new ObjectId(stock) } : {}),
+          ...(holder ? { holder: new ObjectId(holder) } : {}),
           ...(endDate
             ? {
                 createdAt: {

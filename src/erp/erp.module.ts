@@ -15,6 +15,7 @@ import {
   WaybillRef,
   WaybillSchema,
 } from 'src/common/schemas';
+import { DocumentModule, DocumentService } from 'src/document';
 import { BalancesController } from './balances.controller';
 import { CategoryController } from './category.controller';
 import { CategoryService } from './category.service';
@@ -37,6 +38,7 @@ import { WaybillService } from './waybill.service';
       { name: WaybillCounterRef, schema: WaybillCounterSchema },
       { name: TransactionRef, schema: TransactionSchema },
     ]),
+    DocumentModule,
   ],
   controllers: [
     CategoryController,
@@ -52,6 +54,7 @@ import { WaybillService } from './waybill.service';
     HolderService,
     WaybillService,
     TransactionService,
+    DocumentService,
   ],
 })
 export class ERPModule {}

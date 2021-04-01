@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import bcrypt from 'bcrypt';
 
 import { Role } from 'src/common/enums';
 import { User, UserModel } from 'src/common/interfaces';
@@ -24,7 +25,7 @@ export class UserService {
       await new this.userModel({
         role: Role.Admin,
         username: 'admin@veles.services',
-        password: 'admin',
+        password: await bcrypt.hash('admin', 10),
       }).save();
     }
   }
@@ -40,12 +41,19 @@ export class UserService {
   }
 
   async create(user: CreateUserDto): Promise<User> {
-    return await new this.userModel(user).save();
+    return await new this.userModel({
+      ...user,
+      password: await bcrypt.hash(user.password, 10),
+    }).save();
   }
 
   async update(userId: string, user: UpdateUserDto): Promise<User | null> {
     return await this.userModel
-      .findByIdAndUpdate(userId, user, { new: true })
+      .findByIdAndUpdate(
+        userId,
+        { ...user, password: await bcrypt.hash(user.password, 10) },
+        { new: true },
+      )
       .exec();
   }
 
