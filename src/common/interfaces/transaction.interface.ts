@@ -14,12 +14,13 @@ export interface Transaction {
   readonly type: WaybillType;
   readonly holder: string;
   readonly product: string;
+  readonly discount: boolean;
   readonly quantity: number;
   readonly createdAt?: Date;
 }
 export interface TransactionModel extends Transaction, Document {
   readonly createdAt: Date;
-  readonly snapshot: ProductSnapshot;
+  readonly price: number;
 }
 
 export interface TransactionPopulated

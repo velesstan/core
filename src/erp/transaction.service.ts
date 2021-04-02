@@ -25,25 +25,18 @@ export class TransactionService {
     transaction: Transaction,
     reduce = false,
   ): Promise<TransactionModel> {
-    const { action, type, product, quantity, holder, createdAt } = transaction;
+    const { product, discount } = transaction;
 
     const populatedProduct = await this.productModel.findById(product);
 
     if (!populatedProduct) {
       throw new HttpException('', HttpStatus.INTERNAL_SERVER_ERROR);
     }
-    let price: number;
-
-    if (action === WaybillAction.SELL && reduce === true)
-      price = populatedProduct.toObject().price_wholesale;
-    else price = populatedProduct.toObject().price_retail;
-
     return await new this.transactionModel({
       ...transaction,
-      snapshot: {
-        reduce,
-        price,
-      },
+      price: discount
+        ? populatedProduct.price_wholesale
+        : populatedProduct.price_retail,
     }).save();
   }
 

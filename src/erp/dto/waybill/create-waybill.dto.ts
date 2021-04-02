@@ -16,15 +16,6 @@ import dayjs from 'dayjs';
 
 import { WaybillAction } from 'src/common/enums';
 
-class ProductSnapshotDto {
-  @IsNumber()
-  @IsPositive()
-  readonly price: number;
-
-  @IsBoolean()
-  readonly reduce: boolean;
-}
-
 class ProductDto {
   @IsString()
   @IsNotEmpty()
@@ -32,9 +23,8 @@ class ProductDto {
   @IsNumber()
   @IsPositive()
   readonly quantity: number;
-  @ValidateNested()
-  @Type(() => ProductSnapshotDto)
-  readonly snapshot: ProductSnapshotDto;
+  @IsBoolean()
+  readonly discount: boolean;
 }
 
 export class CreateWaybillDto {

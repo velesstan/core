@@ -205,7 +205,7 @@ export class WaybillService {
       case WaybillAction.IMPORT: {
         const { action, products, destination } = waybill;
         const transactions = await Promise.all(
-          products.map(({ product, quantity }) =>
+          products.map(({ product, quantity, discount }) =>
             this.transactionService.create({
               type: WaybillType.INCOME,
               holder: destination,
@@ -213,6 +213,7 @@ export class WaybillService {
               action,
               product,
               quantity,
+              discount,
             }),
           ),
         );
@@ -222,7 +223,7 @@ export class WaybillService {
       case WaybillAction.UTILIZATION: {
         const { action, products, source, createdAt } = waybill;
         const transactions = await Promise.all(
-          products.map(({ product, quantity }) =>
+          products.map(({ product, quantity, discount }) =>
             this.transactionService.create({
               type: WaybillType.OUTCOME,
               holder: source,
@@ -230,6 +231,7 @@ export class WaybillService {
               createdAt,
               action,
               product,
+              discount,
             }),
           ),
         );
@@ -238,7 +240,7 @@ export class WaybillService {
       case WaybillAction.MOVE: {
         const { action, products, source, destination, createdAt } = waybill;
         const outcomeTransactions = await Promise.all(
-          products.map(({ product, quantity }) =>
+          products.map(({ product, quantity, discount }) =>
             this.transactionService.create({
               type: WaybillType.OUTCOME,
               holder: source,
@@ -246,11 +248,12 @@ export class WaybillService {
               createdAt,
               action,
               product,
+              discount,
             }),
           ),
         );
         const incomeTransactions = await Promise.all(
-          products.map(({ product, quantity }) =>
+          products.map(({ product, quantity, discount }) =>
             this.transactionService.create({
               type: WaybillType.INCOME,
               holder: destination,
@@ -258,6 +261,7 @@ export class WaybillService {
               action,
               product,
               quantity,
+              discount,
             }),
           ),
         );
@@ -289,6 +293,7 @@ export class WaybillService {
               quantity:
                 -populatedProducts[i].requires[j].quantity *
                 populatedProducts[i].quantity,
+              discount: false,
             });
             outcomeTransactions.push(transaction);
           }
@@ -302,6 +307,7 @@ export class WaybillService {
               action,
               product,
               quantity,
+              discount: false,
             }),
           ),
         );

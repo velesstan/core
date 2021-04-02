@@ -38,16 +38,10 @@ export const TransactionSchema = new Schema({
     type: Date,
     default: () => new Date(),
   },
-  snapshot: {
-    type: {
-      price: {
-        type: Number,
-        required: true,
-      },
-      reduce: {
-        type: Boolean,
-        required: true,
-      },
-    },
+  price: {
+    type: Number,
+  },
+  discount: {
+    type: Boolean,
   },
 });

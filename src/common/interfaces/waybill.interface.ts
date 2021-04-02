@@ -10,6 +10,7 @@ import {
 interface Item {
   readonly product: string;
   readonly quantity: number;
+  readonly discount: boolean;
 }
 interface BaseWaybill {
   readonly createdAt: Date;

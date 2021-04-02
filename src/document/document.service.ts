@@ -30,17 +30,12 @@ export class DocumentService {
       destination: (waybill.destination as any)?.title,
       items: waybill.toObject().transactions.map((t) => ({
         product: t.product,
-        price: t.snapshot ? t.snapshot.price : (t.product as any).price_retail,
+        price: t.price,
         quantity: Math.abs(t.quantity),
-        total:
-          Math.abs(t.quantity) *
-          (t.snapshot ? t.snapshot.price : (t.product as any).price_retail),
+        total: Math.abs(t.quantity) * t.price,
       })),
       subtotal: waybill.transactions.reduce(
-        (acc, t) =>
-          (acc +=
-            Math.abs(t.quantity) *
-            (t.snapshot ? t.snapshot.price : (t.product as any).price_retail)),
+        (acc, t) => (acc += Math.abs(t.quantity) * t.price),
         0,
       ),
     });
