@@ -87,7 +87,7 @@ export class WaybillService {
           : {}),
       })
       .sort('-createdAt')
-      .limit(10)
+      .limit(30)
       .populate([
         {
           path: 'transactions',
