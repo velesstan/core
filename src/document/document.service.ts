@@ -6,6 +6,8 @@ import fs from 'fs';
 
 import { WaybillModel } from 'src/common/interfaces';
 
+import mapTransactions from './helpers/mapTransactions';
+
 const templateHTML = fs.readFileSync(
   path.join(__dirname, 'templates', 'invoice.html'),
   'utf-8',
@@ -28,14 +30,14 @@ export class DocumentService {
       serialNumber: zeroPad(waybill.serialNumber, 6),
       source: (waybill.source as any)?.title,
       destination: (waybill.destination as any)?.title,
-      items: waybill.toObject().transactions.map((t) => ({
-        product: t.product,
-        price: t.price,
-        quantity: Math.abs(t.quantity),
-        total: Math.abs(t.quantity) * t.price,
+      items: mapTransactions(waybill).map(({ product, price, quantity }) => ({
+        product,
+        price,
+        quantity,
+        total: quantity * price,
       })),
       subtotal: waybill.transactions.reduce(
-        (acc, t) => (acc += Math.abs(t.quantity) * t.price),
+        (acc, { quantity, price }) => (acc += quantity * price),
         0,
       ),
     });
