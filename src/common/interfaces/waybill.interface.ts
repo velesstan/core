@@ -42,6 +42,7 @@ export interface WaybillCounterModel extends Document {
 type Sell = {
   action: WaybillAction.SELL;
   source: string;
+  destination: string;
 } & BaseWaybill;
 type Utilize = {
   action: WaybillAction.UTILIZATION;

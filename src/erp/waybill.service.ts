@@ -189,13 +189,15 @@ export class WaybillService {
       throw new HttpException('Resource doesnt exist', HttpStatus.BAD_REQUEST);
   }
 
-  async deleteWaybill(waybillId: string): Promise<void> {
+  async deleteWaybill(waybillId: string): Promise<WaybillModel> {
     const waybill = await this.waybillModel.findByIdAndRemove(waybillId).exec();
     if (waybill) {
       await Promise.all(
         waybill.transactions.map((t) => this.transactionService.delete(t._id)),
       );
-    }
+      return waybill;
+    } else
+      throw new HttpException('Resrouce doesnt exist', HttpStatus.BAD_REQUEST);
   }
 
   async prepareTransactions(waybill: TWaybill): Promise<TransactionModel[]> {
@@ -339,7 +341,10 @@ export class WaybillService {
         const { destination } = waybill;
         return { destination };
       }
-      case WaybillAction.SELL:
+      case WaybillAction.SELL: {
+        const { source, destination } = waybill;
+        return { source, destination };
+      }
       case WaybillAction.UTILIZATION: {
         const { source } = waybill;
         return { source };

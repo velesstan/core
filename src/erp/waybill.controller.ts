@@ -52,7 +52,7 @@ export class WaybillController {
   }
 
   @Delete('/:id')
-  async delete(@Param('id') id: string): Promise<void> {
+  async delete(@Param('id') id: string): Promise<WaybillModel> {
     return await this.waybillService.deleteWaybill(id);
   }
 
