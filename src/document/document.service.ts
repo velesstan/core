@@ -36,7 +36,7 @@ export class DocumentService {
         quantity,
         total: quantity * price,
       })),
-      subtotal: waybill.transactions.reduce(
+      subtotal: mapTransactions(waybill).reduce(
         (acc, { quantity, price }) => (acc += quantity * price),
         0,
       ),
