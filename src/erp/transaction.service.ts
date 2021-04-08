@@ -6,6 +6,7 @@ import { ObjectId } from 'mongodb';
 import {
   ProductModel,
   Transaction,
+  TransactionBalance,
   TransactionModel,
 } from 'src/common/interfaces';
 import { ProductRef, TransactionRef } from 'src/common/schemas';
@@ -44,7 +45,7 @@ export class TransactionService {
     await this.transactionModel.findByIdAndDelete(transactionId).exec();
   }
 
-  async countBalances(query: FindBalancesDto) {
+  async countBalances(query: FindBalancesDto): Promise<TransactionBalance[]> {
     const { holder, startDate, endDate, code, category } = query;
     const aggregated = await this.transactionModel.aggregate([
       {
@@ -70,7 +71,7 @@ export class TransactionService {
           endBalance: {
             $sum: '$quantity',
           },
-          totalIncome: {
+          income: {
             $sum: {
               $cond: [
                 {
@@ -84,7 +85,7 @@ export class TransactionService {
               ],
             },
           },
-          totalOutcome: {
+          outcome: {
             $sum: {
               $cond: [
                 {
@@ -130,9 +131,23 @@ export class TransactionService {
         $unwind: '$category',
       },
       {
+        $project: {
+          _id: 0,
+          category: '$category.title',
+          productId: '$product._id',
+          code: '$product.code',
+          title: '$product.title',
+          unit: '$product.unit',
+          startBalance: 1,
+          endBalance: 1,
+          income: 1,
+          outcome: 1,
+        },
+      },
+      {
         $sort: { 'category.sortPriority': 1, 'product.code': 1 },
       },
     ]);
-    return aggregated;
+    return aggregated as TransactionBalance[];
   }
 }

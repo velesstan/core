@@ -1,10 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import puppeteer, { PDFOptions } from 'puppeteer';
 import handlebars from 'handlebars';
+import xlsx from 'xlsx';
 import path from 'path';
 import fs from 'fs';
 
-import { WaybillModel } from 'src/common/interfaces';
+import { TransactionBalance, WaybillModel } from 'src/common/interfaces';
 
 import mapTransactions from './helpers/mapTransactions';
 
@@ -73,5 +74,51 @@ export class DocumentService {
     const pdfFile = await page.pdf(options as PDFOptions);
     await browser.close();
     return pdfFile;
+  }
+
+  async createBalancesXlsxBook(
+    transactions: TransactionBalance[],
+  ): Promise<Buffer> {
+    const wb = xlsx.utils.book_new();
+
+    const sheet = xlsx.utils.aoa_to_sheet([
+      [
+        '№',
+        'Категория',
+        'Код',
+        'Название',
+        'Остаток на начало',
+        'Приход',
+        'Расход',
+        'Остаток на конец',
+      ],
+      ...transactions.map(
+        (
+          {
+            code,
+            title,
+            category,
+            unit,
+            startBalance,
+            endBalance,
+            income,
+            outcome,
+          },
+          index,
+        ) => [
+          index + 1,
+          category,
+          code,
+          title,
+          `${startBalance} ${unit}`,
+          `${income} ${unit}`,
+          `${outcome} ${unit}`,
+          `${endBalance} ${unit}`,
+        ],
+      ),
+    ]);
+    wb.SheetNames.push('Остатки');
+    wb.Sheets['Остатки'] = sheet;
+    return xlsx.write(wb, { bookType: 'xlsx', type: 'buffer' });
   }
 }

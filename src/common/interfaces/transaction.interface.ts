@@ -28,3 +28,15 @@ export interface TransactionPopulated
   readonly holder: HolderModel;
   readonly product: ProductModel;
 }
+
+export interface TransactionBalance {
+  readonly productId: string;
+  readonly category: string;
+  readonly code: string;
+  readonly title: string;
+  readonly unit: string;
+  readonly startBalance: number;
+  readonly endBalance: number;
+  readonly income: number;
+  readonly outcome: number;
+}
