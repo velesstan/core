@@ -19,6 +19,7 @@ import { DocumentModule, DocumentService } from 'src/document';
 import { BalancesController } from './balances.controller';
 import { CategoryController } from './category.controller';
 import { CategoryService } from './category.service';
+import { ExportController } from './export.controller';
 import { HolderController } from './holder.controller';
 import { HolderService } from './holder.service';
 import { ProductController } from './product.controller';
@@ -47,6 +48,7 @@ import { WaybillService } from './waybill.service';
     WaybillController,
     TransactionController,
     BalancesController,
+    ExportController,
   ],
   providers: [
     CategoryService,

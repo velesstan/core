@@ -5,7 +5,11 @@ import xlsx from 'xlsx';
 import path from 'path';
 import fs from 'fs';
 
-import { TransactionBalance, WaybillModel } from 'src/common/interfaces';
+import {
+  TransactionBalance,
+  WaybillModel,
+  Product,
+} from 'src/common/interfaces';
 
 import mapTransactions from './helpers/mapTransactions';
 
@@ -13,6 +17,13 @@ const templateHTML = fs.readFileSync(
   path.join(__dirname, 'templates', 'invoice.html'),
   'utf-8',
 );
+
+type ProductsBook = {
+  [i: string]: {
+    category: string;
+    products: Product[];
+  };
+};
 
 @Injectable()
 export class DocumentService {
@@ -119,6 +130,28 @@ export class DocumentService {
     ]);
     wb.SheetNames.push('Остатки');
     wb.Sheets['Остатки'] = sheet;
+    return xlsx.write(wb, { bookType: 'xlsx', type: 'buffer' });
+  }
+
+  async createProductsXlsxBook(data: ProductsBook): Promise<Buffer> {
+    const wb = xlsx.utils.book_new();
+    for (const item in data) {
+      const { category, products } = data[item];
+      const ws = xlsx.utils.aoa_to_sheet([
+        ['№', 'Код', 'Название', 'Цена розн.', 'Цена опт.'],
+        ...products.map(
+          ({ code, title, price_retail, price_wholesale }, index) => [
+            index + 1,
+            code,
+            title,
+            price_retail,
+            price_wholesale,
+          ],
+        ),
+      ]);
+      wb.SheetNames.push(category);
+      wb.Sheets[category] = ws;
+    }
     return xlsx.write(wb, { bookType: 'xlsx', type: 'buffer' });
   }
 }
