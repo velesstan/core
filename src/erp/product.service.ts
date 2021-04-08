@@ -28,7 +28,15 @@ export class ProductService {
   }
 
   async getById(id: string): Promise<ProductModel> {
-    const $product = await this.productModel.findById(id).exec();
+    const $product = await this.productModel
+      .findById(id)
+      .populate([
+        {
+          path: 'requires',
+          populate: [{ path: 'product', populate: 'category' }],
+        },
+      ])
+      .exec();
     if ($product) return $product;
     else
       throw new HttpException('Resource doesnt exist', HttpStatus.BAD_REQUEST);
