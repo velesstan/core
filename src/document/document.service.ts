@@ -4,9 +4,9 @@ import handlebars from 'handlebars';
 import xlsx from 'xlsx';
 import path from 'path';
 import fs from 'fs';
-import { Product } from '@velesstan/interfaces';
+import { Product, ProductBalance } from '@velesstan/interfaces';
 
-import { TransactionBalance, WaybillModel } from 'src/common/interfaces';
+import { WaybillModel } from 'src/common/interfaces';
 
 import mapTransactions from './helpers/mapTransactions';
 
@@ -85,7 +85,7 @@ export class DocumentService {
   }
 
   async createBalancesXlsxBook(
-    transactions: TransactionBalance[],
+    transactions: ProductBalance[],
   ): Promise<Buffer> {
     const wb = xlsx.utils.book_new();
 

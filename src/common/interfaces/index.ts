@@ -4,7 +4,6 @@ export {
   Transaction,
   TransactionModel,
   TransactionPopulated,
-  TransactionBalance,
 } from './transaction.interface';
 export {
   WaybillCounterModel,

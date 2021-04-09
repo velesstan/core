@@ -2,13 +2,9 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { ObjectId } from 'mongodb';
-import { ProductModel } from '@velesstan/interfaces';
+import { ProductBalance, ProductModel } from '@velesstan/interfaces';
 
-import {
-  Transaction,
-  TransactionBalance,
-  TransactionModel,
-} from 'src/common/interfaces';
+import { Transaction, TransactionModel } from 'src/common/interfaces';
 import { ProductRef, TransactionRef } from 'src/common/schemas';
 
 import { WaybillAction } from 'src/common/enums';
@@ -45,7 +41,7 @@ export class TransactionService {
     await this.transactionModel.findByIdAndDelete(transactionId).exec();
   }
 
-  async countBalances(query: FindBalancesDto): Promise<TransactionBalance[]> {
+  async countBalances(query: FindBalancesDto): Promise<ProductBalance[]> {
     const { holder, startDate, endDate, code, category } = query;
     const aggregated = await this.transactionModel.aggregate([
       {
@@ -132,9 +128,8 @@ export class TransactionService {
       },
       {
         $project: {
-          _id: 0,
+          _id: '$product._id',
           category: '$category.title',
-          productId: '$product._id',
           code: '$product.code',
           title: '$product.title',
           unit: '$product.unit',
@@ -148,6 +143,6 @@ export class TransactionService {
         $sort: { 'category.sortPriority': 1, 'product.code': 1 },
       },
     ]);
-    return aggregated as TransactionBalance[];
+    return aggregated as ProductBalance[];
   }
 }

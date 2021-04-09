@@ -1,6 +1,5 @@
 import { Controller, Get, Query } from '@nestjs/common';
-
-import { TransactionBalance } from 'src/common/interfaces';
+import { ProductBalance } from '@velesstan/interfaces';
 
 import { FindBalancesDto } from './dto/balances';
 import { TransactionService } from './transaction.service';
@@ -12,7 +11,7 @@ export class BalancesController {
   @Get('/')
   async countBalances(
     @Query() query: FindBalancesDto,
-  ): Promise<TransactionBalance[]> {
+  ): Promise<ProductBalance[]> {
     return await this.transactionService.countBalances(query);
   }
 }
