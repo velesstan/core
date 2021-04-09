@@ -4,12 +4,9 @@ import handlebars from 'handlebars';
 import xlsx from 'xlsx';
 import path from 'path';
 import fs from 'fs';
+import { Product } from '@velesstan/interfaces';
 
-import {
-  TransactionBalance,
-  WaybillModel,
-  Product,
-} from 'src/common/interfaces';
+import { TransactionBalance, WaybillModel } from 'src/common/interfaces';
 
 import mapTransactions from './helpers/mapTransactions';
 

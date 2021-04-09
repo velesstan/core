@@ -6,7 +6,6 @@ export {
   TransactionPopulated,
   TransactionBalance,
 } from './transaction.interface';
-export { Product, ProductModel } from './product.interface';
 export {
   WaybillCounterModel,
   Waybill,

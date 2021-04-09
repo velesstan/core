@@ -1,9 +1,9 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { ProductModel, Product } from '@velesstan/interfaces';
 
 import { ProductRef } from 'src/common/schemas';
-import { Product, ProductModel } from 'src/common/interfaces';
 import { FindProductDto } from './dto/product';
 
 @Injectable()

@@ -9,10 +9,10 @@ import {
   UseGuards,
   Query,
 } from '@nestjs/common';
+import { ProductModel } from '@velesstan/interfaces';
 
 import { JwtAuthGuard } from 'src/common/guards';
 
-import { ProductModel } from 'src/common/interfaces';
 import {
   CreateProductDto,
   FindProductDto,

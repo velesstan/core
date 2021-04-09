@@ -2,9 +2,9 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { ObjectId } from 'mongodb';
+import { ProductModel } from '@velesstan/interfaces';
 
 import {
-  ProductModel,
   Transaction,
   TransactionBalance,
   TransactionModel,

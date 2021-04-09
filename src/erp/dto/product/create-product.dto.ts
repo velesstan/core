@@ -8,8 +8,7 @@ import {
   IsOptional,
 } from 'class-validator';
 import { Transform } from 'class-transformer';
-
-import { Product } from 'src/common/interfaces';
+import { Product } from '@velesstan/interfaces';
 
 export class CreateProductDto implements Product {
   @IsString()
