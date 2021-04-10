@@ -1,7 +1,10 @@
 import { Controller, Get, Header, Query, Res } from '@nestjs/common';
 import { Response } from 'express';
 import { Readable } from 'stream';
-import { createBalancesXlsxBook } from '@velesstan/utils';
+import {
+  createBalancesXlsxBook,
+  createProductsXlsxBook,
+} from '@velesstan/utils';
 
 import { DocumentService } from 'src/document';
 
@@ -47,16 +50,15 @@ export class ExportController {
   @Get('/products')
   async exportProducts(@Res() response: Response) {
     const categories = await this.categoryService.find();
-    const data: any = {};
-    for (let i = 0; i < categories.length; i++) {
-      data[i] = {
-        category: categories[i].title,
+    const productData = await Promise.all(
+      categories.map(async (category) => ({
+        category,
         products: await this.productService.find({
-          category: categories[i]._id,
+          category: category._id,
         }),
-      };
-    }
-    const buffer = await this.documentService.createProductsXlsxBook(data);
+      })),
+    );
+    const buffer = createProductsXlsxBook(productData);
     try {
       Readable.from(buffer).pipe(response);
     } catch (e) {
