@@ -127,6 +127,9 @@ export class TransactionService {
         $unwind: '$category',
       },
       {
+        $sort: { 'category.sortPriority': 1, 'product.code': 1 },
+      },
+      {
         $project: {
           _id: '$product._id',
           category: '$category.title',
@@ -138,9 +141,6 @@ export class TransactionService {
           income: 1,
           outcome: 1,
         },
-      },
-      {
-        $sort: { 'category.sortPriority': 1, 'product.code': 1 },
       },
     ]);
     return aggregated as ProductBalance[];

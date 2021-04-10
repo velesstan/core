@@ -1,6 +1,7 @@
 import { Controller, Get, Header, Query, Res } from '@nestjs/common';
 import { Response } from 'express';
 import { Readable } from 'stream';
+import { createBalancesXlsxBook } from '@velesstan/utils';
 
 import { DocumentService } from 'src/document';
 
@@ -30,7 +31,7 @@ export class ExportController {
     @Res() response: Response,
   ) {
     const balances = await this.transactionService.countBalances(query);
-    const buffer = await this.documentService.createBalancesXlsxBook(balances);
+    const buffer = createBalancesXlsxBook(balances);
     try {
       Readable.from(buffer).pipe(response);
     } catch (e) {
