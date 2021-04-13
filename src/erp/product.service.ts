@@ -1,9 +1,10 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { ProductModel, Product } from '@velesstan/interfaces';
+import { ICreateProductDto, IUpdateProductDto } from '@velesstan/interfaces';
 
 import { ProductRef } from 'src/common/schemas';
+import { ProductModel } from 'src/common/interfaces';
 import { FindProductDto } from './dto/product';
 
 @Injectable()
@@ -42,12 +43,15 @@ export class ProductService {
       throw new HttpException('Resource doesnt exist', HttpStatus.BAD_REQUEST);
   }
 
-  async create(product: Product): Promise<ProductModel> {
+  async create(product: ICreateProductDto): Promise<ProductModel> {
     return await (
       await new this.productModel(product).populate('category').save()
     ).execPopulate();
   }
-  async updateById(id: string, product: Product): Promise<ProductModel | null> {
+  async updateById(
+    id: string,
+    product: IUpdateProductDto,
+  ): Promise<ProductModel | null> {
     return await this.productModel
       .findByIdAndUpdate(id, product, {
         new: true,

@@ -8,9 +8,9 @@ import {
   IsOptional,
 } from 'class-validator';
 import { Transform } from 'class-transformer';
-import { Product } from '@velesstan/interfaces';
+import { ICreateProductDto } from '@velesstan/interfaces';
 
-export class CreateProductDto implements Product {
+export class CreateProductDto implements ICreateProductDto {
   @IsString()
   @Length(24)
   readonly category: string;

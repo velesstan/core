@@ -9,8 +9,8 @@ import {
   UseGuards,
   Query,
 } from '@nestjs/common';
-import { ProductModel } from '@velesstan/interfaces';
 
+import { ProductModel } from 'src/common/interfaces';
 import { JwtAuthGuard } from 'src/common/guards';
 
 import {

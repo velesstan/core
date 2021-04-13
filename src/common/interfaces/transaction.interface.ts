@@ -1,13 +1,8 @@
-import { ProductModel } from '@velesstan/interfaces';
 import { Document } from 'mongoose';
 
 import { WaybillAction, WaybillType } from 'src/common/enums';
 import { HolderModel } from './holder.interface';
-
-interface ProductSnapshot {
-  readonly price: number;
-  readonly reduce: boolean;
-}
+import { ProductModel } from './product.interface';
 
 export interface Transaction {
   readonly action: WaybillAction;

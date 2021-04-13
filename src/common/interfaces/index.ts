@@ -1,5 +1,6 @@
 export { User, UserModel } from './user.interface';
 export { Category, CategoryModel } from './category.interface';
+export { ProductModel } from './product.interface';
 export {
   Transaction,
   TransactionModel,

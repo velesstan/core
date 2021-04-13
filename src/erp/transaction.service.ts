@@ -2,13 +2,16 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { ObjectId } from 'mongodb';
-import { ProductBalance, ProductModel } from '@velesstan/interfaces';
+import { ProductBalance, Transaction } from '@velesstan/interfaces';
 
-import { Transaction, TransactionModel } from 'src/common/interfaces';
 import { ProductRef, TransactionRef } from 'src/common/schemas';
+import { TransactionModel, ProductModel } from 'src/common/interfaces';
 
-import { WaybillAction } from 'src/common/enums';
 import { FindBalancesDto } from './dto/balances';
+
+type TNewTransaction = Omit<Transaction, '_id' | 'price' | 'product'> & {
+  product: string;
+};
 
 @Injectable()
 export class TransactionService {
@@ -18,10 +21,7 @@ export class TransactionService {
     @InjectModel(ProductRef) private readonly productModel: Model<ProductModel>,
   ) {}
 
-  async create(
-    transaction: Transaction,
-    reduce = false,
-  ): Promise<TransactionModel> {
+  async create(transaction: TNewTransaction): Promise<TransactionModel> {
     const { product, discount } = transaction;
 
     const populatedProduct = await this.productModel.findById(product);
