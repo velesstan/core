@@ -1,11 +1,11 @@
-FROM node:15-slim AS development
+FROM node:16-slim AS development
 WORKDIR /core
-COPY package.json /core
-RUN npm install
+COPY package*.json /core
+RUN npm ci
 COPY . /core
 RUN npm run build
 
-FROM node:15-slim as production
+FROM node:16-slim as production
 RUN  apt-get update \
     && apt-get install -y wget gnupg ca-certificates \
     && wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
