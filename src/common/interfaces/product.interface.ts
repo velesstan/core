@@ -6,6 +6,7 @@ export interface ProductModel extends Document {
   unit: string;
   price_retail: number;
   price_wholesale: number;
+  price_prime: number;
   category: string;
   requires: ReadonlyArray<{ product: string; quantity: number }>;
 }

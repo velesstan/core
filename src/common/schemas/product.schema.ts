@@ -32,6 +32,11 @@ export const ProductSchema = new Schema(
       required: false,
       default: 0,
     },
+    price_prime: {
+      type: Number,
+      required: false,
+      default: 0,
+    },
     requires: {
       type: [
         {

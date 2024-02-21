@@ -36,5 +36,11 @@ export class CreateProductDto implements ICreateProductDto {
   readonly price_wholesale: number;
 
   @IsOptional()
+  @IsNumber({}, { message: 'Себестоимость должна быть числом' })
+  @IsPositive({ message: 'Себестоимость должна быть положительным числом' })
+  @Transform(({ value }) => Number(value))
+  readonly price_prime: number;
+
+  @IsOptional()
   readonly requires: Array<any>;
 }
